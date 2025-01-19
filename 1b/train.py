@@ -12,7 +12,7 @@ class CustomDataset(torch.utils.data.Dataset):
         return len(self.dataset)
 
     def __getitem__(self, idx):
-        tokenized = tokenizer(self.dataset[idx]['text'], return_tensors="pt")
+        tokenized = tokenizer(self.dataset[idx]['text'], return_tensors="pt", padding=True, truncation=True, max_length=512)
         return {
             'input_ids': tokenized['input_ids'],
             'attention_mask': tokenized['attention_mask'],
@@ -33,7 +33,7 @@ class CustomDataCollator:
         }
 
 tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.2-1B")
-model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.2-1B", device_map="auto")
+model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.2-1B")
 print("Model loaded")
 
 tokenizer.pad_token = tokenizer.eos_token
@@ -56,7 +56,7 @@ training_args = TrainingArguments(
     max_steps = 50,
     fp16=True,
     gradient_checkpointing=True,
-    deepspeed="/workspace/deepspeed-boilerplate/1b/ds_config.json",
+    deepspeed="ds_config.json",
     label_names=["labels"]
 )
 trainer = Trainer(
