@@ -91,6 +91,38 @@ Measured:
 Measured:
 - no offload: 24-32GB(varies but will not OOM) per gpu, 7.3s / step (batch_size=1, max_length=512)
 
+### 70b model
+
+- It takes ~1h to download the model weights from huggingface.
+- It takes ~3min to load the model
+
+#### 8 gpu
+```
+  per CPU  |  per GPU |   Options
+ 1558.96GB |   3.91GB | offload_param=cpu , offload_optimizer=cpu , zero_init=1
+ 2771.49GB |   3.91GB | offload_param=cpu , offload_optimizer=cpu , zero_init=0
+ 1385.74GB |  18.35GB | offload_param=none, offload_optimizer=cpu , zero_init=1
+ 2771.49GB |  18.35GB | offload_param=none, offload_optimizer=cpu , zero_init=0
+   46.97GB | 133.83GB | offload_param=none, offload_optimizer=none, zero_init=1
+ 2771.49GB | 133.83GB | offload_param=none, offload_optimizer=none, zero_init=0
+```
+
+#### 48 gpu
+
+- [ ] Write srun script to connect 48 gpus
+
+```
+  per CPU  |  per GPU |   Options
+ 1558.96GB |   3.91GB | offload_param=cpu , offload_optimizer=cpu , zero_init=1
+ 16628.93GB |   3.91GB | offload_param=cpu , offload_optimizer=cpu , zero_init=0
+ 1385.74GB |   6.32GB | offload_param=none, offload_optimizer=cpu , zero_init=1
+ 16628.93GB |   6.32GB | offload_param=none, offload_optimizer=cpu , zero_init=0
+  281.81GB |  25.57GB | offload_param=none, offload_optimizer=none, zero_init=1
+ 16628.93GB |  25.57GB | offload_param=none, offload_optimizer=none, zero_init=0
+```
+
+
+
 ## Common Issues
 
 1. The server socket has failed to listen on any local network address
