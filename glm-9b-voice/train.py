@@ -29,7 +29,7 @@ class CustomDataset(torch.utils.data.Dataset):
         return len(self.dataset)
 
     def __getitem__(self, idx):
-        tokenized = self.tokenizer(self.dataset[idx]['text'], return_tensors="pt", padding=True, truncation=True, max_length=512)
+        tokenized = self.tokenizer(self.dataset[idx], return_tensors="pt", padding=True, truncation=True, max_length=512)
         return {
             'input_ids': tokenized['input_ids'],
             'attention_mask': tokenized['attention_mask'],
@@ -67,8 +67,8 @@ training_args = TrainingArguments(
     logging_strategy="steps",
     logging_steps=1,
     max_steps = 50,
-    fp16=True,
-    gradient_checkpointing=True,
+    bf16=True,
+    gradient_checkpointing=False,
     deepspeed="ds_config.json",
     label_names=["labels"]
 )
